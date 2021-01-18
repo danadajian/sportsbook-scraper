@@ -2,9 +2,10 @@
   "compilerOptions": {
     "target": "ES6",
     "lib": ["ES6", "dom"],
-    "types": ["cypress", "@testing-library/cypress"]
+    "types": ["cypress", "@testing-library/cypress", "node"]
   },
   "include": [
-    "**/*.ts"
+    "**/*.ts",
+    "node_modules"
   ]
 }

@@ -1,40 +1,59 @@
-describe('Collect Alternate Spreads and Total Data', () => {
+import {getParlays} from "../../src/getParlays";
+import {BetType, SportsbookBet} from "../../types";
+
+describe('Fanduel', () => {
     before(() => {
-        cy.visit('https://il.sportsbook.fanduel.com/sports/navigation/6227.1/13348.3');
+        cy.visit('/sports/navigation/6227.1/13348.3');
     });
 
-    it('Selects events', () => {
+    it('Collect Bet Data', () => {
+        let betData: SportsbookBet[] = [];
         cy.get('[idfoevent]')
-            .first()
-            .find('section')
-            .contains('MORE WAGERS')
-            .click();
-        cy.findByRole('heading', { name: /Alternate Spread/i })
-            .click({ force: true });
-        cy.findAllByRole('button', { name: /See more/i })
-            .eq(1)
-            .click({ force: true });
-        cy.get('[class="selections-container"]')
-            .eq(1)
-            .find('[class="selections"]')
-            .then($selections => {
-                let bets;
-                let prices;
-                cy.wrap($selections)
-                    .find('[class*="selectionname"]')
-                    .then($stuff => {
-                        bets = Array.from($stuff, el => el.innerText);
-                    });
-                cy.wrap($selections)
-                    .find('[class*="selectionprice"]')
-                    .then($stuff => {
-                        prices = Array.from($stuff, el => el.innerText);
-                    })
-                    .then(() => {
-                        // @ts-ignore
-                        const result = Object.assign(...bets.map((k, i) => ({[k]: prices[i]})));
-                        console.log(result);
-                    });
+            .not('.LiveEventInfoComponent')
+            .getAttributes('idfoevent')
+            .each(eventId => {
+                cy.visit(`/sports/event/${eventId}`);
+                saveBetInformation('Alternate Spread');
+                saveBetInformation('Alternate Total');
+            })
+            .then(() => {
+                const parlays = getParlays(betData);
+                cy.log(parlays);
             });
+
+        const saveBetInformation = (betType: BetType) => {
+            cy.findByRole('heading', {name: new RegExp(betType, 'i')})
+                .click({force: true});
+            cy.findAllByRole('button', {name: /See more/i})
+                .last()
+                .click({force: true})
+                .get('.selections-container')
+                .last()
+                .find('.selections')
+                .then($selections => {
+                    let bets;
+                    let odds;
+                    cy.wrap($selections)
+                        .find('.selectionname')
+                        .then($stuff => {
+                            bets = Array.from($stuff, el => el.innerText);
+                        });
+                    cy.wrap($selections)
+                        .find('.selectionprice')
+                        .then($stuff => {
+                            odds = Array.from($stuff, el => el.innerText);
+                        })
+                        .then(() => {
+                            const betsAndOdds = bets.map((bet, index) => ({
+                                bet,
+                                odds: odds[index]
+                            }));
+                            betData.push({
+                                betType,
+                                betsAndOdds
+                            });
+                        });
+                });
+        };
     });
 });
