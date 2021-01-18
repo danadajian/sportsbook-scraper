@@ -1,5 +1,6 @@
-import {getParlays} from "../../src/getParlays";
 import {BetType, SportsbookBet} from "../../types";
+import {invokeLambdaFunction} from "../../aws";
+import "../../env";
 
 describe('Fanduel', () => {
     before(() => {
@@ -16,10 +17,7 @@ describe('Fanduel', () => {
                 saveBetInformation('Alternate Spread');
                 saveBetInformation('Alternate Total');
             })
-            .then(() => {
-                const parlays = getParlays(betData);
-                cy.log(parlays);
-            });
+            .then(() => invokeLambdaFunction(process.env.PARLAY_GENERATOR_LAMBDA, {betData}));
 
         const saveBetInformation = (betType: BetType) => {
             cy.findByRole('heading', {name: new RegExp(betType, 'i')})
