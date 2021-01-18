@@ -1,22 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   BucketName:
     Type: String
   CodeKey:
     Type: String
-Globals:
-  Function:
-    MemorySize: 512
-    Timeout: 900
 
 Resources:
   SportsbookScraperFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri:
-        Bucket: !Ref BucketName
-        Key: !Ref CodeKey
+      Code:
+        S3Bucket:
+          Ref: BucketName
+        S3Key:
+          Ref: CodeKey
       Handler: build/index.scrapeSportsbookHandler
       Runtime: nodejs12.x
+      MemorySize: 512
+      Timeout: 900

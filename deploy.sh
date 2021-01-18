@@ -32,14 +32,14 @@ echo "### Initiating Cloudformation Deploy..."
 STACK_NAME="sportsbook-scraper-stack"
 
 if aws cloudformation describe-stacks --stack-name "${STACK_NAME}"; then
-  echo "Creating stack..."
+  echo "Updating stack..."
   aws cloudformation update-stack \
     --stack-name "${STACK_NAME}" \
     --template-body file://./template.yaml \
     --capabilities CAPABILITY_IAM \
     --parameters ParameterKey=BucketName,ParameterValue="${BUCKET_NAME}" ParameterKey=CodeKey,ParameterValue="${FILE_NAME}"
 else
-  echo "Updating stack..."
+  echo "Creating stack..."
   aws cloudformation create-stack \
     --stack-name "${STACK_NAME}" \
     --template-body file://./template.yaml \
