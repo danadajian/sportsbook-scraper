@@ -29,6 +29,7 @@ aws s3 rm "s3://${BUCKET_NAME}" --recursive --exclude "*" --include "*.zip"
 aws s3 cp "${FILE_NAME}" "s3://${BUCKET_NAME}/"
 
 echo "### Initiating Cloudformation Deploy..."
+STACK_NAME="sportsbook-scraper-stack"
 
 if aws cloudformation describe-stacks --stack-name "${STACK_NAME}"; then
   aws cloudformation update-stack \
