@@ -1,12 +1,11 @@
 {
   "compilerOptions": {
     "outDir": "./build",
-    "target": "ES6",
     "lib": ["ES6", "dom"],
     "types": ["cypress", "@testing-library/cypress", "node"],
     "moduleResolution": "node",
     "esModuleInterop": true
   },
-  "include": ["**/*.ts"],
+  "include": ["src/**/*", "cypress/**/*"],
   "exclude": ["node_modules"]
 }
