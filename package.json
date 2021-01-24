@@ -3,16 +3,35 @@
   "version": "0.0.1",
   "scripts": {
     "cypress:open": "cypress open",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "dependencies": {
     "@testing-library/cypress": "latest",
     "@types/aws-sdk": "latest",
     "@types/dotenv": "latest",
+    "@types/jest": "latest",
     "@types/node": "latest",
     "aws-sdk": "latest",
     "cypress": "latest",
     "dotenv": "latest",
+    "jest": "latest",
+    "ts-jest": "latest",
     "typescript": "latest"
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/build/",
+      "<rootDir>/node_modules/"
+    ]
   }
 }

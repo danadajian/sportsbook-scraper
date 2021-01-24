@@ -1,6 +1,6 @@
 import * as cypress from 'cypress';
 
-export const scrapeSportsbookHandler = () => {
+export const sportsbookScraperHandler = () => {
     return cypress.run({
         browser: 'chrome'
     });

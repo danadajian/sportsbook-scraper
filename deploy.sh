@@ -8,14 +8,10 @@ else
   aws s3api put-bucket-cors --bucket "${BUCKET_NAME}" --cors-configuration file://./bucket-cors.json
 fi
 
-LAMBDA_FUNCTIONS=$(aws lambda list-functions)
-PARLAY_GENERATOR_LAMBDA=$(echo "$LAMBDA_FUNCTIONS" | jq -r '.Functions[] | select(.FunctionName | contains("ParlayGeneratorFunction"))' | jq '.FunctionName')
-
 echo "### Creating environment variables..."
 {
   echo "AWS_KEY=$AWS_ACCESS_KEY_ID"
   echo "AWS_SECRET=$AWS_SECRET_ACCESS_KEY"
-  echo "PARLAY_GENERATOR_LAMBDA=$PARLAY_GENERATOR_LAMBDA"
 } >.env
 cat .env
 
